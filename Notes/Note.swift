@@ -125,4 +125,27 @@ class NoteManager {
         }
         sqlite3_finalize(statement)
     }
+
+    func delete(note: Note) {
+        connect()
+
+        var statement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(
+            database,
+            "DELETE FROM notes WHERE rowid = ?",
+            -1,
+            &statement,
+            nil
+        ) != SQLITE_OK {
+            print("Error creating note deletion statement")
+        }
+
+        sqlite3_bind_int(statement, 1, note.id)
+
+        if sqlite3_step(statement) != SQLITE_DONE {
+            print("Error deleting note")
+        }
+
+        sqlite3_finalize(statement)
+    }
 }
