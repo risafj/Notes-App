@@ -54,6 +54,22 @@ class NotesListViewController: UITableViewController {
     }
 
     @objc func labelSwipedLeft(sender: UISwipeGestureRecognizer) {
-        print("labelSwipedLeft called for row \(sender.view!.tag)")
+        deleteNote(noteRow: sender.view!.tag)
+    }
+
+    func deleteNote(noteRow: Int) {
+        let ac = UIAlertController(title: "Delete this note?", message: notes[noteRow].content, preferredStyle: .alert)
+
+        let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: .default, handler: {
+            (action: UIAlertAction!) -> Void in
+            NoteManager.shared.delete(note: self.notes[noteRow])
+            self.reload()
+        })
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        ac.addAction(defaultAction)
+        ac.addAction(cancelAction)
+
+        present(ac, animated: true)
     }
 }
