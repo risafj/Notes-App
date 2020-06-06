@@ -34,6 +34,14 @@ class NotesListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath)
         cell.textLabel?.text = notes[indexPath.row].content
+        // This is for passing the row number to the swipe function.
+        cell.textLabel?.tag = indexPath.row
+
+        cell.textLabel?.isUserInteractionEnabled = true
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.labelSwipedLeft(sender:)))
+        swipeLeft.direction = .left
+        cell.textLabel?.addGestureRecognizer(swipeLeft)
+
         return cell
     }
     
@@ -43,5 +51,9 @@ class NotesListViewController: UITableViewController {
                 let index = tableView.indexPathForSelectedRow?.row {
             destination.note = notes[index]
         }
+    }
+
+    @objc func labelSwipedLeft(sender: UISwipeGestureRecognizer) {
+        print("labelSwipedLeft called for row \(sender.view!.tag)")
     }
 }
